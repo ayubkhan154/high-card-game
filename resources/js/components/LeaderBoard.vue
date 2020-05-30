@@ -48,7 +48,7 @@ export default {
     methods: {
         fetchGames() {
             let vm = this;
-            axios.get('http://127.0.0.1:8000/api/playerData')
+            axios.get('api/playerData')
                 .then(function (response) {
                 vm.scores = response.data;
                 console.log(response.data);

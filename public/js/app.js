@@ -1987,7 +1987,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     fetchGames: function fetchGames() {
       var vm = this;
-      axios.get('http://127.0.0.1:8000/api/playerData').then(function (response) {
+      axios.get('api/playerData').then(function (response) {
         vm.scores = response.data;
         console.log(response.data);
       })["catch"](function (error) {
@@ -2039,13 +2039,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       playerName: '',
       playerHand: '',
-      generatedHand: ''
+      generatedHand: 'Hidden',
+      compScore: 'TBD',
+      playerScore: 'TBD'
     };
+  },
+  methods: {
+    makePostRequest: function makePostRequest() {
+      var vm = this;
+      axios.post('api/playerData/store', {
+        data: {
+          name: this.playerName,
+          userHand: this.playerHand
+        }
+      }).then(function (response) {
+        vm.generatedHand = response.data.generatedHand;
+        vm.playerScore = response.data.userScore;
+        vm.compScore = response.data.compScore;
+      })["catch"](function (error) {//Silent Fail
+      });
+      ;
+    }
   }
 });
 
@@ -37752,94 +37775,157 @@ var render = function() {
   return _c("div", { staticClass: "playArea" }, [
     _c("h1", [_vm._v("Play High Hand Game")]),
     _vm._v(" "),
-    _c("form", { attrs: { id: "playArea" } }, [
-      _c("p", [
-        _c("label", { attrs: { for: "playerName" } }, [_vm._v("Player Name")]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.playerName,
-              expression: "playerName"
-            }
-          ],
-          attrs: { type: "text", id: "playerName" },
-          domProps: { value: _vm.playerName },
+    _c("div", { staticClass: "container py-2" }, [
+      _c(
+        "form",
+        {
+          attrs: { id: "playArea", method: "POST" },
           on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.playerName = $event.target.value
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.makePostRequest()
             }
           }
-        }),
-        _vm._v("\n             " + _vm._s(_vm.playerName) + "\n         ")
-      ]),
-      _vm._v(" "),
-      _c("p", [
-        _c("label", { attrs: { for: "playerHand" } }, [_vm._v("Player Hand")]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.playerHand,
-              expression: "playerHand"
-            }
-          ],
-          attrs: { type: "text", id: "playerHand" },
-          domProps: { value: _vm.playerHand },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.playerHand = $event.target.value
-            }
-          }
-        }),
-        _vm._v("\n             " + _vm._s(_vm.playerhand) + "\n         ")
-      ]),
-      _vm._v(" "),
-      _c("p", [
-        _c("label", { attrs: { for: "generatedHand" } }, [
-          _vm._v("Generated Hand")
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.generatedHand,
-              expression: "generatedHand"
-            }
-          ],
-          attrs: { type: "text", id: "generatedHand", disabled: "" },
-          domProps: { value: _vm.generatedHand },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.generatedHand = $event.target.value
-            }
-          }
-        }),
-        _vm._v("\n             " + _vm._s(_vm.generatedHand) + "\n         ")
-      ]),
-      _vm._v(" "),
-      _c("p", [
-        _c("pre", [_vm._v("data: " + _vm._s(_vm._f("json 2")(_vm.$data)))])
-      ])
+        },
+        [
+          _c("table", [
+            _c("tr", [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.playerName,
+                      expression: "playerName"
+                    }
+                  ],
+                  attrs: {
+                    type: "text",
+                    placeholder: "John Doe",
+                    id: "playerName",
+                    required: ""
+                  },
+                  domProps: { value: _vm.playerName },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.playerName = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.playerHand,
+                      expression: "playerHand"
+                    }
+                  ],
+                  attrs: {
+                    type: "text",
+                    placeholder: "K A Q 2 J K",
+                    id: "playerHand",
+                    required: ""
+                  },
+                  domProps: { value: _vm.playerHand },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.playerHand = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v("Score: " + _vm._s(_vm.playerScore))])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.generatedHand,
+                      expression: "generatedHand"
+                    }
+                  ],
+                  attrs: { type: "text", id: "generatedHand", disabled: "" },
+                  domProps: { value: _vm.generatedHand },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.generatedHand = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v("Score: " + _vm._s(_vm.compScore))])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "btn btn-primary",
+            attrs: { type: "submit", value: "Play Hand" }
+          }),
+          _vm._v(" "),
+          _c("p", [
+            _c("pre", [_vm._v("data: " + _vm._s(_vm._f("json 2")(_vm.$data)))])
+          ])
+        ]
+      )
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _c("label", { attrs: { for: "playerName" } }, [_vm._v("Your Name")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _c("label", { attrs: { for: "playerHand" } }, [_vm._v("Your Hand")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _c("label", { attrs: { for: "generatedHand" } }, [
+        _vm._v("Generated Hand")
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -50012,13 +50098,9 @@ module.exports = function(module) {
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _form__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./form */ "./resources/js/form.js");
-/* harmony import */ var _form__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_form__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -50027,8 +50109,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-
-window.form = _form__WEBPACK_IMPORTED_MODULE_0___default.a;
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -50361,239 +50441,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PlayArea_vue_vue_type_template_id_e5cb5a68___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
-
-/***/ }),
-
-/***/ "./resources/js/form.js":
-/*!******************************!*\
-  !*** ./resources/js/form.js ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Errors = /*#__PURE__*/function () {
-  /**
-   * Create a new Errors instance.
-   */
-  function Errors() {
-    _classCallCheck(this, Errors);
-
-    this.errors = {};
-  }
-  /**
-   * Determine if an errors exists for the given field.
-   *
-   * @param {string} field
-   */
-
-
-  _createClass(Errors, [{
-    key: "has",
-    value: function has(field) {
-      return this.errors.hasOwnProperty(field);
-    }
-    /**
-     * Determine if we have any errors.
-     */
-
-  }, {
-    key: "any",
-    value: function any() {
-      return Object.keys(this.errors).length > 0;
-    }
-    /**
-     * Retrieve the error message for a field.
-     *
-     * @param {string} field
-     */
-
-  }, {
-    key: "get",
-    value: function get(field) {
-      if (this.errors[field]) {
-        return this.errors[field][0];
-      }
-    }
-    /**
-     * Record the new errors.
-     *
-     * @param {object} errors
-     */
-
-  }, {
-    key: "record",
-    value: function record(errors) {
-      this.errors = errors;
-    }
-    /**
-     * Clear one or all error fields.
-     *
-     * @param {string|null} field
-     */
-
-  }, {
-    key: "clear",
-    value: function clear(field) {
-      if (field) {
-        delete this.errors[field];
-        return;
-      }
-
-      this.errors = {};
-    }
-  }]);
-
-  return Errors;
-}();
-
-var Form = /*#__PURE__*/function () {
-  /**
-   * Create a new Form instance.
-   *
-   * @param {object} data
-   */
-  function Form(data) {
-    _classCallCheck(this, Form);
-
-    this.originalData = data;
-
-    for (var field in data) {
-      this[field] = data[field];
-    }
-
-    this.errors = new Errors();
-  }
-  /**
-   * Fetch all relevant data for the form.
-   */
-
-
-  _createClass(Form, [{
-    key: "data",
-    value: function data() {
-      var data = {};
-
-      for (var property in this.originalData) {
-        data[property] = this[property];
-      }
-
-      return data;
-    }
-    /**
-     * Reset the form fields.
-     */
-
-  }, {
-    key: "reset",
-    value: function reset() {
-      for (var field in this.originalData) {
-        this[field] = '';
-      }
-
-      this.errors.clear();
-    }
-    /**
-     * Send a POST request to the given URL.
-     * .
-     * @param {string} url
-     */
-
-  }, {
-    key: "post",
-    value: function post(url) {
-      return this.submit('post', url);
-    }
-    /**
-     * Send a PUT request to the given URL.
-     * .
-     * @param {string} url
-     */
-
-  }, {
-    key: "put",
-    value: function put(url) {
-      return this.submit('put', url);
-    }
-    /**
-     * Send a PATCH request to the given URL.
-     * .
-     * @param {string} url
-     */
-
-  }, {
-    key: "patch",
-    value: function patch(url) {
-      return this.submit('patch', url);
-    }
-    /**
-     * Send a DELETE request to the given URL.
-     * .
-     * @param {string} url
-     */
-
-  }, {
-    key: "delete",
-    value: function _delete(url) {
-      return this.submit('delete', url);
-    }
-    /**
-     * Submit the form.
-     *
-     * @param {string} requestType
-     * @param {string} url
-     */
-
-  }, {
-    key: "submit",
-    value: function submit(requestType, url) {
-      var _this = this;
-
-      return new Promise(function (resolve, reject) {
-        axios[requestType](url, _this.data()).then(function (response) {
-          _this.onSuccess(response.data);
-
-          resolve(response.data);
-        })["catch"](function (error) {
-          _this.onFail(error.response.data);
-
-          reject(error.response.data);
-        });
-      });
-    }
-    /**
-     * Handle a successful form submission.
-     *
-     * @param {object} data
-     */
-
-  }, {
-    key: "onSuccess",
-    value: function onSuccess(data) {
-      alert(data.message); // temporary
-
-      this.reset();
-    }
-    /**
-     * Handle a failed form submission.
-     *
-     * @param {object} errors
-     */
-
-  }, {
-    key: "onFail",
-    value: function onFail(errors) {
-      this.errors.record(errors);
-    }
-  }]);
-
-  return Form;
-}();
 
 /***/ }),
 
