@@ -6,8 +6,11 @@ This game generates an equal amount of cards and for each card you who ever has 
 
 For example:
 
-* ***Player Hand:*** 2 5 A -> ***Score:*** 0+0+1=1
-* ***Computer Hand:*** 2 6 K -> ***Score:*** 0+1+0=1
+*Player Hand* | *Computer Hand* | *Player Score* | *Computer Score*
+-------------------|-------------------|----------|----------
+2 5 A | 2 6 K | 1 | 1
+A K A | 2 3 4 | 3 | 0
+10 K J | A Q 9 | 2 |  1
 
 On the bottom of the page there is a leaderboard which shows all players grouped by the name with details of how many games they have played and how did they win against the computer
 
