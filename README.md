@@ -14,6 +14,12 @@ A K A | 2 3 4 | 3 | 0
 
 On the bottom of the page there is a leaderboard which shows all players grouped by the name with details of how many games they have played and how did they win against the computer
 
+## Input Restrictions
+
+* A user can't not enter more than 26 cards
+* The card should be entered with a space for example *A K* 
+* The card should be from the list *A K Q J 10 9 8 7 6 5 4 3 2*
+
 ## Steps to steup
 
 * Install Composer
