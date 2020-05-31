@@ -1991,7 +1991,7 @@ __webpack_require__.r(__webpack_exports__);
         vm.scores = response.data;
         console.log(response.data);
       })["catch"](function (error) {
-        // handle error
+        // Silent Fail
         console.log(error);
       }).then(function () {// always executed
       });
@@ -2043,6 +2043,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2050,7 +2056,12 @@ __webpack_require__.r(__webpack_exports__);
       playerHand: '',
       generatedHand: 'Hidden',
       compScore: 'TBD',
-      playerScore: 'TBD'
+      playerScore: 'TBD',
+      errorDisplay: false,
+      errorMessage: '',
+      winner: false,
+      userWon: '',
+      draw: false
     };
   },
   methods: {
@@ -2062,10 +2073,39 @@ __webpack_require__.r(__webpack_exports__);
           userHand: this.playerHand
         }
       }).then(function (response) {
-        vm.generatedHand = response.data.generatedHand;
-        vm.playerScore = response.data.userScore;
-        vm.compScore = response.data.compScore;
-      })["catch"](function (error) {//Silent Fail
+        if (response) {
+          vm.errorDisplay = false;
+          vm.winner = false;
+          vm.draw = false;
+          console.log(response);
+          vm.generatedHand = response.data.generatedHand;
+          vm.playerScore = response.data.userScore;
+          vm.compScore = response.data.compScore;
+          vm.userWon = response.data.userWon;
+
+          if (vm.compScore !== vm.playerScore) {
+            vm.winner = true;
+
+            if (vm.userWon && vm.draw == false) {
+              console.log(vm.userWon);
+              vm.userWon = 'You have defeated the computer 😀';
+            } else {
+              console.log(vm.userWon);
+              vm.userWon = 'Computer has defeated you 😢';
+            }
+          } else {
+            console.log(vm.userWon);
+            vm.draw = true;
+            vm.userWon = 'This match is a draw 😢';
+          }
+        } else {
+          console.log("error");
+        }
+      })["catch"](function (error) {
+        //Silent Fail
+        console.log(error.response.data);
+        vm.errorDisplay = true;
+        vm.errorMessage = error.response.data;
       });
       ;
     }
@@ -37665,7 +37705,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "leaderBoard" } }, [
-    _c("h2", [_vm._v("Leader Board")]),
+    _c("h2", { staticClass: "d-flex justify-content-center" }, [
+      _vm._v("Leader Board")
+    ]),
     _vm._v(" "),
     _c("table", { staticClass: "table table-striped" }, [
       _vm._m(0),
@@ -37745,7 +37787,7 @@ var staticRenderFns = [
     return _c("nav", { staticClass: "navbar navbar-dark bg-dark" }, [
       _c("div", { staticClass: "container" }, [
         _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
-          _vm._v("High Card Game")
+          _vm._v("The High Card Game")
         ])
       ])
     ])
@@ -37773,9 +37815,40 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "playArea" }, [
-    _c("h1", [_vm._v("Play High Hand Game")]),
-    _vm._v(" "),
     _c("div", { staticClass: "container py-2" }, [
+      _c("h2", { staticClass: "d-flex justify-content-center" }, [
+        _vm._v("Play Game")
+      ]),
+      _c("br"),
+      _vm._v(" "),
+      _vm.errorDisplay
+        ? _c(
+            "p",
+            { staticClass: "alert alert-danger d-flex justify-content-center" },
+            [_vm._v(_vm._s(_vm.errorMessage) + " 😟")]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.winner
+        ? _c(
+            "p",
+            {
+              staticClass: "alert alert-success d-flex justify-content-center"
+            },
+            [_vm._v(_vm._s(_vm.userWon))]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.draw
+        ? _c(
+            "p",
+            {
+              staticClass: "alert alert-warning d-flex justify-content-center"
+            },
+            [_vm._v(_vm._s(_vm.userWon))]
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _c(
         "form",
         {
@@ -37788,114 +37861,113 @@ var render = function() {
           }
         },
         [
-          _c("table", [
-            _c("tr", [
-              _vm._m(0),
-              _vm._v(" "),
-              _c("td", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.playerName,
-                      expression: "playerName"
-                    }
-                  ],
-                  attrs: {
-                    type: "text",
-                    placeholder: "John Doe",
-                    id: "playerName",
-                    required: ""
-                  },
-                  domProps: { value: _vm.playerName },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+          _c("div", { staticClass: "d-flex justify-content-center" }, [
+            _c("table", { staticClass: "table table-dark" }, [
+              _c("tr", [
+                _vm._m(0),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.playerName,
+                        expression: "playerName"
                       }
-                      _vm.playerName = $event.target.value
+                    ],
+                    attrs: {
+                      type: "text",
+                      placeholder: "John Doe",
+                      id: "playerName",
+                      required: ""
+                    },
+                    domProps: { value: _vm.playerName },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.playerName = $event.target.value
+                      }
                     }
-                  }
-                })
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("tr", [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.playerHand,
+                        expression: "playerHand"
+                      }
+                    ],
+                    attrs: {
+                      type: "text",
+                      placeholder: "K A Q 2 J K",
+                      id: "playerHand",
+                      required: ""
+                    },
+                    domProps: { value: _vm.playerHand },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.playerHand = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v("Score: " + _vm._s(_vm.playerScore))])
+              ]),
+              _vm._v(" "),
+              _c("tr", [
+                _vm._m(2),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.generatedHand,
+                        expression: "generatedHand"
+                      }
+                    ],
+                    attrs: { type: "text", id: "generatedHand", disabled: "" },
+                    domProps: { value: _vm.generatedHand },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.generatedHand = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v("Score: " + _vm._s(_vm.compScore))])
               ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _vm._m(1),
-              _vm._v(" "),
-              _c("td", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.playerHand,
-                      expression: "playerHand"
-                    }
-                  ],
-                  attrs: {
-                    type: "text",
-                    placeholder: "K A Q 2 J K",
-                    id: "playerHand",
-                    required: ""
-                  },
-                  domProps: { value: _vm.playerHand },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.playerHand = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v("Score: " + _vm._s(_vm.playerScore))])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _vm._m(2),
-              _vm._v(" "),
-              _c("td", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.generatedHand,
-                      expression: "generatedHand"
-                    }
-                  ],
-                  attrs: { type: "text", id: "generatedHand", disabled: "" },
-                  domProps: { value: _vm.generatedHand },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.generatedHand = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v("Score: " + _vm._s(_vm.compScore))])
             ])
           ]),
           _vm._v(" "),
-          _c("input", {
-            staticClass: "btn btn-primary",
-            attrs: { type: "submit", value: "Play Hand" }
-          }),
-          _vm._v(" "),
-          _c("p", [
-            _c("pre", [_vm._v("data: " + _vm._s(_vm._f("json 2")(_vm.$data)))])
-          ])
+          _vm._m(3)
         ]
       )
-    ])
+    ]),
+    _vm._v(" "),
+    _c("hr", {
+      staticStyle: { "border-top": "8px solid #bbb", "border-radius": "5px" }
+    })
   ])
 }
 var staticRenderFns = [
@@ -37923,6 +37995,17 @@ var staticRenderFns = [
       _c("label", { attrs: { for: "generatedHand" } }, [
         _vm._v("Generated Hand")
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "text-center" }, [
+      _c("input", {
+        staticClass: "btn btn-primary",
+        attrs: { type: "submit", value: "Play Hand" }
+      })
     ])
   }
 ]

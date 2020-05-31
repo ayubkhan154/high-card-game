@@ -1,8 +1,7 @@
 <template>
 
     <div id="leaderBoard">
-        <h2>Leader Board</h2>
-
+        <h2 class="d-flex justify-content-center">Leader Board</h2>
             <table class="table table-striped">
                 <thead class="thead-dark text-center">
                     <tr>
@@ -21,6 +20,7 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
     </div>
 
 </template>
@@ -54,7 +54,7 @@ export default {
                 console.log(response.data);
             })
             .catch(function (error) {
-                // handle error
+                // Silent Fail
                 console.log(error);
             })
             .then(function () {

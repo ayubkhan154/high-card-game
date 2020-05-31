@@ -44,7 +44,7 @@ class PlayerController extends Controller
         $validateHand = self::validateHand($userHand);
 
         if (!$validateHand) {
-            return response('The hand is invalid', 400)
+            return response('The hand you entered is invalid', 400)
                     ->header('Content-Type', 'text/plain');
         }
         
@@ -52,23 +52,24 @@ class PlayerController extends Controller
         
         $calculateScores = self::calculateScore($userHand, $generatedHand);
 
-        $returnData = [
-            'generatedHand' => implode(" ", $generatedHand),
-            'userScore' => $calculateScores['userScore'],
-            'compScore' => $calculateScores['compScore']
-        ];
-
         $playerData->name = $request->data['name'];
         $playerData->userScore = $calculateScores['userScore'];
         $playerData->compScore = $calculateScores['compScore'];
         $playerData->userWon = $playerData->userScore > $playerData->compScore ? 1 : 0;
+
+        $returnData = [
+            'generatedHand' => implode(" ", $generatedHand),
+            'userScore' => $calculateScores['userScore'],
+            'compScore' => $calculateScores['compScore'],
+            'userWon' => $playerData->userScore > $playerData->compScore ? 1 : 0
+        ];
 
         if ($playerData->save()) {
             //send success message
             return response()->json($returnData);
         } else {
             //return if there was an issue inserting the values in db
-            return response('Failed', 500)
+            return response('Failed to insert data', 500)
                   ->header('Content-Type', 'text/plain');
         }
     }
@@ -132,6 +133,4 @@ class PlayerController extends Controller
 }
 
 // leaderboard
-// win message
-// error messages
 // add if statement for leader if no users

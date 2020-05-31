@@ -19,8 +19,6 @@
                 
                 <play-area></play-area>
                 <leader-board></leader-board>
-                <example-component></example-component>
-
             </div>
         </div>
 
