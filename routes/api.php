@@ -17,12 +17,6 @@ use App\Http\Controllers\BoardController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-//Show top 10 on Leader Board
-
 Route::get('playerData', 'PlayerController@show');
 
 Route::get('playerData/index', 'PlayerController@index');

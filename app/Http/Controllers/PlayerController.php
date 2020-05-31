@@ -44,7 +44,7 @@ class PlayerController extends Controller
         $validateHand = self::validateHand($userHand);
 
         if (!$validateHand) {
-            return response('The hand you entered is invalid', 400)
+            return response('The hand you entered is invalid 😟, please make sure you follow the above given instructions and all cards are seperated with a space 😀', 400)
                     ->header('Content-Type', 'text/plain');
         }
         
@@ -52,7 +52,7 @@ class PlayerController extends Controller
         
         $calculateScores = self::calculateScore($userHand, $generatedHand);
 
-        $playerData->name = $request->data['name'];
+        $playerData->name = trim($request->data['name']);
         $playerData->userScore = $calculateScores['userScore'];
         $playerData->compScore = $calculateScores['compScore'];
         $playerData->userWon = $playerData->userScore > $playerData->compScore ? 1 : 0;
@@ -82,13 +82,22 @@ class PlayerController extends Controller
      */
     public function show()
     {
-        $topTen = PlayerData::where('userWon', '=', '1')
-            ->where('userScore', '>', 'compScore')
-            ->orderBy('userScore', 'desc')
-            ->limit(10)
-            ->get();
+        $tableData = [];
 
-        return $topTen;
+        $results = PlayerData::select('name', PlayerData::raw('count(*) as total'))
+            ->groupBy('name')
+            ->get();
+        
+        foreach ($results as $result) {
+            $userWon = PlayerData::where('name', '=', $result['name'])
+            ->where('userWon', '=', '1')
+            ->count();
+
+            $result['userWon'] = $userWon;
+            array_push($tableData, $result);
+        }
+
+        return $tableData;
     }
 
     public static function calculateScore($userHand, $compHand)
@@ -131,6 +140,3 @@ class PlayerController extends Controller
         return $generatedHand;
     }
 }
-
-// leaderboard
-// add if statement for leader if no users

@@ -1968,6 +1968,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1975,8 +1979,7 @@ __webpack_require__.r(__webpack_exports__);
       score: {
         id: '',
         name: '',
-        userScore: '',
-        compScore: '',
+        total: '',
         userWon: ''
       }
     };
@@ -1989,10 +1992,7 @@ __webpack_require__.r(__webpack_exports__);
       var vm = this;
       axios.get('api/playerData').then(function (response) {
         vm.scores = response.data;
-        console.log(response.data);
-      })["catch"](function (error) {
-        // Silent Fail
-        console.log(error);
+      })["catch"](function (error) {// Silent Fail
       }).then(function () {// always executed
       });
     }
@@ -2049,6 +2049,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2061,12 +2064,17 @@ __webpack_require__.r(__webpack_exports__);
       errorMessage: '',
       winner: false,
       userWon: '',
-      draw: false
+      draw: false,
+      playText: 'Play Hand'
     };
   },
   methods: {
     makePostRequest: function makePostRequest() {
       var vm = this;
+      vm.errorDisplay = false;
+      vm.winner = false;
+      vm.draw = false;
+      vm.playText = "🍿 ♠ ♣ ♥ ♦ 🍿";
       axios.post('api/playerData/store', {
         data: {
           name: this.playerName,
@@ -2074,10 +2082,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (response) {
         if (response) {
-          vm.errorDisplay = false;
-          vm.winner = false;
-          vm.draw = false;
-          console.log(response);
+          vm.playText = "Play Hand";
           vm.generatedHand = response.data.generatedHand;
           vm.playerScore = response.data.userScore;
           vm.compScore = response.data.compScore;
@@ -2087,23 +2092,20 @@ __webpack_require__.r(__webpack_exports__);
             vm.winner = true;
 
             if (vm.userWon && vm.draw == false) {
-              console.log(vm.userWon);
               vm.userWon = 'You have defeated the computer 😀';
             } else {
-              console.log(vm.userWon);
               vm.userWon = 'Computer has defeated you 😢';
             }
           } else {
-            console.log(vm.userWon);
             vm.draw = true;
             vm.userWon = 'This match is a draw 😢';
           }
         } else {
+          //Silent Fail
           console.log("error");
         }
       })["catch"](function (error) {
-        //Silent Fail
-        console.log(error.response.data);
+        vm.playText = "Play Hand";
         vm.errorDisplay = true;
         vm.errorMessage = error.response.data;
       });
@@ -37705,37 +37707,43 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "leaderBoard" } }, [
-    _c("h2", { staticClass: "d-flex justify-content-center" }, [
+    _c("h2", { staticClass: "text-center text-white bg-dark" }, [
       _vm._v("Leader Board")
     ]),
     _vm._v(" "),
-    _c("table", { staticClass: "table table-striped" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        _vm._l(_vm.scores, function(score, index) {
-          return _c(
-            "tr",
-            {
-              key: score.id,
-              staticClass: "results text-center",
-              attrs: { index: index }
-            },
-            [
-              _c("td", [_vm._v(_vm._s((index += 1)))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(score.name))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(score.userScore))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(score.compScore))])
-            ]
-          )
-        }),
-        0
-      )
-    ])
+    _vm.scores.length > 1
+      ? _c("div", [
+          _c("table", { staticClass: "table table-striped" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.scores, function(score, index) {
+                return _c(
+                  "tr",
+                  {
+                    key: score.id,
+                    staticClass: "results text-center",
+                    attrs: { index: index }
+                  },
+                  [
+                    _c("td", [_vm._v(_vm._s((index += 1)))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(score.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(score.userWon))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(score.total))])
+                  ]
+                )
+              }),
+              0
+            )
+          ])
+        ])
+      : _c("div", { staticClass: "text-center alert alert-info" }, [
+          _vm._v("\n        There are no players to display...\n    ")
+        ])
   ])
 }
 var staticRenderFns = [
@@ -37745,13 +37753,13 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "thead-dark text-center" }, [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Rank")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Index")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Player Name")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Player Score")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Games Won")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Computer Score")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Total Games Played")])
       ])
     ])
   }
@@ -37816,37 +37824,28 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "playArea" }, [
     _c("div", { staticClass: "container py-2" }, [
-      _c("h2", { staticClass: "d-flex justify-content-center" }, [
+      _c("h2", { staticClass: "text-center text-white bg-dark" }, [
         _vm._v("Play Game")
       ]),
-      _c("br"),
+      _vm._v(" "),
+      _vm._m(0),
       _vm._v(" "),
       _vm.errorDisplay
-        ? _c(
-            "p",
-            { staticClass: "alert alert-danger d-flex justify-content-center" },
-            [_vm._v(_vm._s(_vm.errorMessage) + " 😟")]
-          )
+        ? _c("p", { staticClass: "alert alert-danger text-center" }, [
+            _vm._v(_vm._s(_vm.errorMessage))
+          ])
         : _vm._e(),
       _vm._v(" "),
       _vm.winner
-        ? _c(
-            "p",
-            {
-              staticClass: "alert alert-success d-flex justify-content-center"
-            },
-            [_vm._v(_vm._s(_vm.userWon))]
-          )
+        ? _c("p", { staticClass: "alert alert-success text-center" }, [
+            _vm._v(_vm._s(_vm.userWon))
+          ])
         : _vm._e(),
       _vm._v(" "),
       _vm.draw
-        ? _c(
-            "p",
-            {
-              staticClass: "alert alert-warning d-flex justify-content-center"
-            },
-            [_vm._v(_vm._s(_vm.userWon))]
-          )
+        ? _c("p", { staticClass: "alert alert-warning text-center" }, [
+            _vm._v(_vm._s(_vm.userWon))
+          ])
         : _vm._e(),
       _vm._v(" "),
       _c(
@@ -37862,9 +37861,9 @@ var render = function() {
         },
         [
           _c("div", { staticClass: "d-flex justify-content-center" }, [
-            _c("table", { staticClass: "table table-dark" }, [
+            _c("table", { staticClass: "table table-dark rounded" }, [
               _c("tr", [
-                _vm._m(0),
+                _vm._m(1),
                 _vm._v(" "),
                 _c("td", [
                   _c("input", {
@@ -37896,7 +37895,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("tr", [
-                _vm._m(1),
+                _vm._m(2),
                 _vm._v(" "),
                 _c("td", [
                   _c("input", {
@@ -37930,7 +37929,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("tr", [
-                _vm._m(2),
+                _vm._m(3),
                 _vm._v(" "),
                 _c("td", [
                   _c("input", {
@@ -37960,7 +37959,29 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm._m(3)
+          _c("div", { staticClass: "text-center" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.playText,
+                  expression: "playText"
+                }
+              ],
+              staticClass: "btn btn-primary",
+              attrs: { type: "submit" },
+              domProps: { value: _vm.playText },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.playText = $event.target.value
+                }
+              }
+            })
+          ])
         ]
       )
     ]),
@@ -37971,6 +37992,18 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", { staticClass: "alert alert-info text-center" }, [
+      _vm._v(
+        'Please, enter a hand which should be less than 26 and seperated by space for example "K Q J 3 4" '
+      ),
+      _c("br"),
+      _vm._v(' Your hand should only include  "A K Q J 10 9 8 7 6 7 5 4 3 2"')
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -37995,17 +38028,6 @@ var staticRenderFns = [
       _c("label", { attrs: { for: "generatedHand" } }, [
         _vm._v("Generated Hand")
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center" }, [
-      _c("input", {
-        staticClass: "btn btn-primary",
-        attrs: { type: "submit", value: "Play Hand" }
-      })
     ])
   }
 ]
