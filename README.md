@@ -1,4 +1,4 @@
-#High Card Game
+# High Card Game
 
 ## About the game
 
