@@ -6,6 +6,6 @@ This game generates an equal amount of cards and for each card you who ever has 
 
 For example:
 
-Player Hand: 2 5 A -> Score: 0+0+1=1
-Computer Hand: 2 6 K -> Score: 0+1+0=1
+* Player Hand: 2 5 A -> Score: 0+0+1=1
+* Computer Hand: 2 6 K -> Score: 0+1+0=1
 
