@@ -1,6 +1,6 @@
 # High Card Game
 
-## About the game
+## About the Game
 
 This game generates an equal amount of cards and for each card who ever has the higher card will get a point. If the cards are the same, no one will get a point and if the total points are equal then the match is a draw.
 
@@ -20,7 +20,7 @@ On the bottom of the page there is a leaderboard which shows all players grouped
 * The card should be entered with a space for example *A K* 
 * The card should be from the list *A K Q J 10 9 8 7 6 5 4 3 2*
 
-## Steps to steup
+## Steps to Setup
 
 * Install Composer
 * Add .env with correct credentials to the database
