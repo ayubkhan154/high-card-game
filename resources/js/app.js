@@ -16,23 +16,9 @@ window.Vue = require('vue');
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
-// Vue.component(
-        
-// // Vue.component('play-area', require('./components/PlayArea.vue'));
-// // Vue.component('leader-board', require('./components/LeaderBoard.vue'));
-// );
-
 Vue.component(
     'play-area', 
     require('./components/PlayArea.vue').default
-);
-
-Vue.component(
-    'example-component',
-    require('./components/ExampleComponent.vue').default
 );
 
 Vue.component(

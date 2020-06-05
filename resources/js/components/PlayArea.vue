@@ -1,12 +1,12 @@
 <template>
     
 <div class="playArea">
-    <div class="container py-2">
 
     <h2 class="text-center text-white bg-dark">Play Game</h2>
 
-    <p class="alert alert-info text-center">Please, enter a hand which should be less than 26 and seperated by space for example "K Q J 3 4" <br> Your hand should only include  "A K Q J 10 9 8 7 6 7 5 4 3 2"</p>
+    <div class="container py-2">
 
+    <p class="alert alert-info text-center">Please, enter a hand which should be less than 26 and seperated by space for example "K Q J 3 4" <br> Your hand should only include  "A K Q J 10 9 8 7 6 7 5 4 3 2"</p>
     <p v-if="errorDisplay" class="alert alert-danger text-center">{{ errorMessage }}</p>
     <p v-if="winner" class="alert alert-success text-center">{{ userWon }}</p>
     <p v-if="draw" class="alert alert-warning text-center">{{ userWon }}</p>
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+
 export default {
 
 data() {
@@ -79,6 +80,7 @@ data() {
                     vm.playerScore = response.data.userScore;
                     vm.compScore = response.data.compScore;
                     vm.userWon = response.data.userWon;
+                    
                     if(vm.compScore !== vm.playerScore){
                         vm.winner = true;
                         if(vm.userWon && vm.draw == false){
@@ -101,10 +103,9 @@ data() {
                     vm.playText = "Play Hand"
                     vm.errorDisplay = true;
                     vm.errorMessage = error.response.data;
-                });;
-}
+                });
+    }
   }
-
 }
 
     

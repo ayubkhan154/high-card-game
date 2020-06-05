@@ -19,6 +19,4 @@ use App\Http\Controllers\BoardController;
 
 Route::get('playerData', 'PlayerController@show');
 
-Route::get('playerData/index', 'PlayerController@index');
-
 Route::post('playerData/store', 'PlayerController@store');
