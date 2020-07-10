@@ -22,9 +22,10 @@ On the bottom of the page there is a leaderboard which shows all players grouped
 
 ## Steps to Setup
 
-* Install Composer
+* Clone the repository locally
 * Add .env with correct credentials to the database
-* (In the root directory of the app) ```Type npm run```
+* (In the root directory of the app) ```Composer install```
+* (In the root directory of the app) ```npm run```
 * (In the root directory of the app) ```php artisan migrate```
 * (In the root directory of the app) ```php artisan serve```
 
